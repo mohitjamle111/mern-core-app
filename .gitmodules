@@ -1,0 +1,9 @@
+[submodule "modules/sales"]
+	path = modules/sales
+	url = ../module-sales.git
+[submodule "modules/inventory"]
+	path = modules/inventory
+	url = ../module-inventory.git
+[submodule "modules/finance"]
+	path = modules/finance
+	url = ../module-finance.git
