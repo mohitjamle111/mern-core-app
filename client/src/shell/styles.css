@@ -1,0 +1,75 @@
+:root {
+  --bg: #0f1216;
+  --panel: #171b21;
+  --panel-2: #1e242c;
+  --line: #2a323c;
+  --text: #e6e9ee;
+  --muted: #97a3b4;
+  --accent: #5b9dff;
+  --ok: #3fbf7f;
+  --warn: #e2b13c;
+  --error: #ec6a5e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+code { font-family: "Cascadia Code", Consolas, monospace; font-size: 0.85em; color: var(--accent); }
+.muted { color: var(--muted); }
+.small { font-size: 0.85em; }
+.loading { padding: 3rem; color: var(--muted); }
+
+/* layout */
+.layout { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+aside { background: var(--panel); border-right: 1px solid var(--line); padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+.brand { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.02em; }
+nav { display: flex; flex-direction: column; gap: 2px; }
+nav a { color: var(--muted); text-decoration: none; padding: 8px 10px; border-radius: 6px; }
+nav a:hover { background: var(--panel-2); color: var(--text); }
+nav a.active { background: var(--accent); color: #06101f; font-weight: 600; }
+.who { margin-top: auto; border-top: 1px solid var(--line); padding-top: 0.75rem; display: grid; gap: 4px; }
+main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; max-width: 1100px; }
+
+/* card */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.card-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+.card-head h2 { margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.card-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+tbody tr:last-child td { border-bottom: none; }
+.money { font-variant-numeric: tabular-nums; }
+
+/* bits */
+.btn { border: 1px solid var(--line); background: var(--accent); color: #06101f; font-weight: 600; padding: 7px 14px; border-radius: 6px; cursor: pointer; }
+.btn-ghost { background: transparent; color: var(--muted); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; background: var(--panel-2); border: 1px solid var(--line); margin-right: 4px; }
+.badge-ok { background: rgba(63,191,127,0.15); color: var(--ok); border-color: rgba(63,191,127,0.4); }
+.badge-warn { background: rgba(226,177,60,0.15); color: var(--warn); border-color: rgba(226,177,60,0.4); }
+.badge-error { background: rgba(236,106,94,0.15); color: var(--error); border-color: rgba(236,106,94,0.4); }
+.badge-muted { color: var(--muted); }
+.notice { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); }
+.notice-warn { border-color: rgba(226,177,60,0.4); color: var(--warn); }
+.notice-error { border-color: rgba(236,106,94,0.4); color: var(--error); }
+.notice-ok { border-color: rgba(63,191,127,0.4); color: var(--ok); }
+
+/* forms */
+input, select { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); padding: 8px 10px; border-radius: 6px; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* login */
+.login-page { display: grid; place-items: center; min-height: 100vh; }
+.login { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 28px; width: 340px; display: flex; flex-direction: column; gap: 10px; }
+.login h1 { margin: 0; font-size: 1.3rem; }
+.hint { margin-top: 8px; color: var(--muted); font-size: 0.8rem; display: grid; gap: 3px; }

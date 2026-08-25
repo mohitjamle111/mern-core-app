@@ -1,0 +1,37 @@
+{
+  "name": "core-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MERN modular monolith. Domain modules live in modules/ as git submodules.",
+  "workspaces": [
+    "server",
+    "client",
+    "modules/*/backend",
+    "modules/*/frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "node --watch server/src/index.js",
+    "dev:web": "vite --config client/vite.config.js",
+    "build": "vite build --config client/vite.config.js",
+    "start": "cross-env NODE_ENV=production node server/src/index.js",
+    "modules:list": "node server/src/core/list-modules.js"
+  },
+  "//": "Shared runtime deps live HERE, not in the module workspaces. That way a developer who only cloned one module still installs everything the core needs. Modules only declare deps that are genuinely their own.",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.9.5",
+    "jsonwebtoken": "^9.0.2",
+    "cookie-parser": "^1.4.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.1"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3"
+  }
+}
