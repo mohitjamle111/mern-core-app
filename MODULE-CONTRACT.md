@@ -5,11 +5,33 @@ submodule. One repo carries both halves of the vertical:
 
 ```
 modules/sales/
-├── backend/index.js      default export { mount, register(ctx) }
+├── backend/index.js      default export { mount, permissions, register(ctx) }
 ├── backend/package.json  workspace — deps only this module needs
 ├── frontend/index.jsx    default export { title, path, icon, requires, Component }
 └── frontend/package.json workspace
 ```
+
+## Backend: declaring permissions
+
+A module declares every permission string it enforces. The loader writes these into the core
+`permissions` collection, which is what the Users admin screen renders — so a new module's
+permissions become grantable without any change to the core, and stay grantable on a server
+where that module is not cloned.
+
+```js
+export default {
+  mount: '/api/sales',
+  permissions: [
+    { key: 'sales:read',  label: 'View customers and orders' },
+    { key: 'sales:write', label: 'Create sales orders' },
+  ],
+  async register(ctx) { /* … */ },
+};
+```
+
+Two wildcards are honoured by `hasPermission()` in the core and mirrored by `can()` in the
+shell: `*` (superadmin) and `sales:*` (whole namespace). Never invent a permission string in a
+route without declaring it here, or nobody will be able to grant it.
 
 ## Backend: `register(ctx)`
 
@@ -34,6 +56,17 @@ export default {
   Component: Sales,
 };
 ```
+
+The shell's UI kit is the whole reason three separately-owned repos look like one product.
+Use it rather than styling your own controls:
+
+| From `@shell/ui.jsx` | Use it for |
+| --- | --- |
+| `Card`, `Table`, `Badge`, `Money`, `Notice` | page structure and data display |
+| `Modal` (`sm` / `md` / `lg` / `full`) | any form or detail view — never an inline form card |
+| `Confirm` | destructive or irreversible actions |
+| `Field`, `CheckRow`, `GroupLabel` | labelled inputs and selectable option rows |
+| `Button` (`primary` / `ghost` / `danger`) | actions |
 
 Import shared pieces from the core repo, which every developer can clone:
 
