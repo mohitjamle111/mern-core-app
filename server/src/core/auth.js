@@ -32,11 +32,6 @@ export function getUserModel() {
   return User;
 }
 
-export const CORE_PERMISSIONS = [
-  { key: 'users:read', label: 'View users and the permission catalogue' },
-  { key: 'users:write', label: 'Create, edit and delete users' },
-];
-
 export async function initAuth() {
   User = moduleDb('core').model('User', userSchema);
 

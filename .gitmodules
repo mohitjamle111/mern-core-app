@@ -7,3 +7,6 @@
 [submodule "modules/finance"]
 	path = modules/finance
 	url = ../mern-module-finance.git
+[submodule "modules/users"]
+	path = modules/users
+	url = ../mern-module-users.git

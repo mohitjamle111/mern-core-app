@@ -15,8 +15,16 @@ mern-core-app/
 └── modules/
     ├── sales/             submodule → mern-module-sales
     ├── inventory/         submodule → mern-module-inventory
-    └── finance/           submodule → mern-module-finance
+    ├── finance/           submodule → mern-module-finance
+    └── users/             submodule → mern-module-users
 ```
+
+**Identity vs. user administration.** The `users` collection, login, JWT issuing and
+`hasPermission()` live in the core — every module depends on them, so they can never sit in a
+repo that might be absent. *Administering* users is not needed for the app to boot, so it is a
+module: `modules/users` consumes the `users` capability from the core registry, exactly as Sales
+consumes `inventory`. Withhold that repo and a developer cannot see user-admin source, while
+login keeps working for them.
 
 ## Quick start
 

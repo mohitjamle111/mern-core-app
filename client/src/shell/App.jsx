@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 're
 
 import { AuthProvider, useAuth } from './AuthContext.jsx';
 import { moduleUis, missingUis } from './modules.jsx';
-import Users from './Users.jsx';
 import { api } from './api.js';
 import { Card, Table, Button, Badge, Notice } from './ui.jsx';
 
@@ -107,7 +106,6 @@ function Shell() {
         <div className="brand">Acme ERP</div>
         <nav>
           <NavLink to="/" end>⌂ Dashboard</NavLink>
-          {can('users:read') && <NavLink to="/users">◎ Users</NavLink>}
           {visible.map((m) => (
             <NavLink key={m.name} to={m.path}>{m.icon} {m.title}</NavLink>
           ))}
@@ -127,7 +125,6 @@ function Shell() {
       <main key={location.pathname}>
         <Routes>
           <Route path="/" element={<Home />} />
-          {can('users:read') && <Route path="/users" element={<Users />} />}
           {visible.map((m) => <Route key={m.name} path={`${m.path}/*`} element={<m.Component />} />)}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

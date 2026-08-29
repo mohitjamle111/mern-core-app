@@ -6,8 +6,8 @@ import cookieParser from 'cookie-parser';
 import * as db from './core/db.js';
 import * as registry from './core/registry.js';
 import * as events from './core/events.js';
-import { authRouter, initAuth, requireAuth, CORE_PERMISSIONS } from './core/auth.js';
-import { usersRouter } from './core/users.js';
+import { authRouter, initAuth, requireAuth } from './core/auth.js';
+import { createUserService } from './core/user-service.js';
 import * as permissions from './core/permissions.js';
 import { loadModules, ROOT } from './core/module-loader.js';
 
@@ -20,11 +20,13 @@ app.use(cookieParser());
 await db.connect();
 await initAuth();
 permissions.initPermissions();
-await permissions.declare('core', CORE_PERMISSIONS);
+
+// The users collection is core-owned, but user ADMINISTRATION is a module.
+// Publish the capability; whoever is loaded may consume it.
+registry.provide('users', createUserService());
 
 // --- core routes (always present, owned by the host repo) --------------------
 app.use('/api/auth', authRouter);
-app.use('/api/core/users', usersRouter);
 
 // --- domain modules (separate repos, loaded only if cloned) ------------------
 const moduleReport = await loadModules(app);
