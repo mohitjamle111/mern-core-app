@@ -44,8 +44,20 @@ npm run dev
 ```
 
 The API listens on `http://localhost:4000` and the Vite dev server proxies `/api` to it from
-`http://localhost:5173`. Seed users: `alice@example.com` / `alice` (sales),
-`bob@example.com` / `bob` (inventory), `carol@example.com` / `carol` (finance).
+`http://localhost:5173`.
+
+Seed users (created on first boot):
+
+| email | password | access |
+| --- | --- | --- |
+| `admin@example.com` | `admin` | `*` — every module, including ones added later |
+| `alice@example.com` | `alice` | `sales:read`, `sales:write`, `inventory:read` |
+| `bob@example.com` | `bob` | `inventory:read`, `inventory:write` |
+| `carol@example.com` | `carol` | `finance:read`, `finance:write`, `sales:read`, `inventory:read` |
+
+Permission strings support two wildcards, checked by `hasPermission()` in
+`server/src/core/auth.js` and mirrored by `can()` in the React shell: `*` grants everything, and
+`sales:*` grants the whole sales namespace.
 
 `GET /api/_core/status` reports which modules loaded, which databases they own, and whether each
 cross-module capability resolved live or to a mock.

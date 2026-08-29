@@ -7,6 +7,7 @@ import { moduleDb, modelFactory } from './db.js';
 import * as registry from './registry.js';
 import * as events from './events.js';
 import { requireAuth, requirePermission } from './auth.js';
+import { declare } from './permissions.js';
 
 /**
  * There is no `import salesModule from '../../modules/sales/backend/index.js'`
@@ -100,9 +101,13 @@ export async function loadModules(app) {
 
       await plugin.register(ctx);
 
+      // Record the permissions this module enforces, so an admin can grant them
+      // from any machine — even one where this module is not cloned.
+      const declared = await declare(mod.name, plugin.permissions);
+
       const mount = plugin.mount || `/api/${mod.name}`;
       app.use(mount, router);
-      report.push({ name: mod.name, url: mod.url, state: 'loaded', mount, db: db.name });
+      report.push({ name: mod.name, url: mod.url, state: 'loaded', mount, db: db.name, permissions: declared });
     } catch (err) {
       report.push({ name: mod.name, url: mod.url, state: 'error', reason: err.message });
     }

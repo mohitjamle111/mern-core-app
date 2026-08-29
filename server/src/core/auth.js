@@ -26,10 +26,26 @@ const userSchema = new mongoose.Schema(
 
 let User;
 
+/** The users collection is core-owned. Only core code (auth, user admin) may use it. */
+export function getUserModel() {
+  if (!User) throw new Error('initAuth() must run before getUserModel()');
+  return User;
+}
+
+export const CORE_PERMISSIONS = [
+  { key: 'users:read', label: 'View users and the permission catalogue' },
+  { key: 'users:write', label: 'Create, edit and delete users' },
+];
+
 export async function initAuth() {
   User = moduleDb('core').model('User', userSchema);
 
   const seed = [
+    // Full access to every module — present and future. The '*' wildcard is
+    // honoured by requirePermission below, so a superadmin does not need editing
+    // each time a new module introduces a new permission string.
+    { email: 'admin@example.com', password: 'admin', name: 'Admin', roles: ['superadmin'],
+      permissions: ['*'] },
     { email: 'alice@example.com', password: 'alice', name: 'Alice', roles: ['sales_agent'],
       permissions: ['sales:read', 'sales:write', 'inventory:read'] },
     { email: 'bob@example.com', password: 'bob', name: 'Bob', roles: ['inventory_manager'],
@@ -67,9 +83,18 @@ export function requireAuth(req, res, next) {
   }
 }
 
+export function hasPermission(user, permission) {
+  const held = user?.permissions || [];
+  if (held.includes('*')) return true;                 // superadmin
+  if (held.includes(permission)) return true;
+  // 'sales:*' grants every permission in the sales namespace.
+  const [namespace] = permission.split(':');
+  return held.includes(`${namespace}:*`);
+}
+
 export function requirePermission(permission) {
   return (req, res, next) => requireAuth(req, res, () => {
-    if (!req.user.permissions?.includes(permission)) {
+    if (!hasPermission(req.user, permission)) {
       return res.status(403).json({ error: `Missing permission: ${permission}`, has: req.user.permissions });
     }
     next();

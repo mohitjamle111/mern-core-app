@@ -3,13 +3,14 @@ import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 're
 
 import { AuthProvider, useAuth } from './AuthContext.jsx';
 import { moduleUis, missingUis } from './modules.jsx';
+import Users from './Users.jsx';
 import { api } from './api.js';
 import { Card, Table, Button, Badge, Notice } from './ui.jsx';
 
 function Login() {
   const { login } = useAuth();
-  const [email, setEmail] = useState('alice@example.com');
-  const [password, setPassword] = useState('alice');
+  const [email, setEmail] = useState('admin@example.com');
+  const [password, setPassword] = useState('admin');
   const [error, setError] = useState(null);
 
   const submit = async (e) => {
@@ -27,6 +28,7 @@ function Login() {
         {error && <Notice tone="error">{error}</Notice>}
         <Button type="submit">Sign in</Button>
         <div className="hint">
+          <div><code>admin@example.com</code> / admin — all modules</div>
           <div><code>alice@example.com</code> / alice — sales</div>
           <div><code>bob@example.com</code> / bob — inventory</div>
           <div><code>carol@example.com</code> / carol — finance</div>
@@ -105,6 +107,7 @@ function Shell() {
         <div className="brand">Acme ERP</div>
         <nav>
           <NavLink to="/" end>⌂ Dashboard</NavLink>
+          {can('users:read') && <NavLink to="/users">◎ Users</NavLink>}
           {visible.map((m) => (
             <NavLink key={m.name} to={m.path}>{m.icon} {m.title}</NavLink>
           ))}
@@ -124,6 +127,7 @@ function Shell() {
       <main key={location.pathname}>
         <Routes>
           <Route path="/" element={<Home />} />
+          {can('users:read') && <Route path="/users" element={<Users />} />}
           {visible.map((m) => <Route key={m.name} path={`${m.path}/*`} element={<m.Component />} />)}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

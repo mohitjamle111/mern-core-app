@@ -31,7 +31,14 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const can = (permission) => !permission || !!user?.permissions?.includes(permission);
+  // Mirrors hasPermission() on the server: '*' is superadmin, 'sales:*' grants
+  // the whole sales namespace. This only hides UI — the API is the real boundary.
+  const can = (permission) => {
+    if (!permission) return true;
+    const held = user?.permissions || [];
+    if (held.includes('*') || held.includes(permission)) return true;
+    return held.includes(`${permission.split(':')[0]}:*`);
+  };
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout, can }}>
